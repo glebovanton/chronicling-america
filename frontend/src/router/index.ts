@@ -5,7 +5,7 @@ import CompanyDetailView from '../views/CompanyDetailView.vue';
 const routes = [
   {
     path: '/',
-    name: 'Search',
+    name: 'Home',
     component: SearchView,
   },
   {
