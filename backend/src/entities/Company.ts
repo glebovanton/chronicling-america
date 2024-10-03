@@ -1,46 +1,103 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity({ name: "fortune500_2024" })
 export class Company {
     @PrimaryGeneratedColumn()
-    id: number = 0;
+    id: number | undefined;
 
-    @Column()
-    name: string = '';
+    @Column('int')
+    rank: number | undefined;
 
-    @Column()
-    ticker: string = '';
+    @Column('varchar', { length: 255 })
+    company: string | undefined;
 
-    @Column()
-    ceo: string = '';
+    @Column('varchar', { length: 255 })
+    ticker: string | undefined;
 
-    @Column()
-    companyType: string = '';
+    @Column('varchar', { length: 255 })
+    sector: string | undefined;
 
-    @Column()
-    industry: string = '';
+    @Column('varchar', { length: 255 })
+    industry: string | undefined;
 
-    @Column()
-    location: string = '';
+    @Column('boolean')
+    profitable: boolean | undefined;
 
-    @Column()
-    marketCap: string = '';
+    @Column('boolean')
+    founder_is_ceo: boolean | undefined;
 
-    @Column()
-    employees: number = 0;
+    @Column('boolean')
+    femaleceo: boolean | undefined;
 
-    @Column()
-    profitable: boolean = false;
+    @Column('float')
+    growth_in_jobs: number | undefined;
 
-    @Column()
-    profits: string = '';
+    @Column('boolean')
+    change_in_rank: boolean | undefined;
 
-    @Column()
-    revenue: string = '';
+    @Column('boolean')
+    gained_in_rank: boolean | undefined;
 
-    @Column()
-    sector: string = '';
+    @Column('boolean')
+    dropped_in_rank: boolean | undefined;
 
-    @Column()
-    website: string = '';
+    @Column('boolean')
+    newcomer_to_the_fortune500: boolean | undefined;
+
+    @Column('boolean')
+    global500: boolean | undefined;
+
+    @Column('boolean')
+    worlds_most_admired_companies: boolean | undefined;
+
+    @Column('boolean')
+    best_companies_to_work_for: boolean | undefined;
+
+    @Column('int')
+    number_of_employees: number | undefined;
+
+    @Column('float')
+    marketcap_march28_m: number | undefined;
+
+    @Column('float')
+    revenues_m: number | undefined;
+
+    @Column('float')
+    revenuepercentchange: number | undefined;
+
+    @Column('float')
+    profits_m: number | undefined;
+
+    @Column('float')
+    profitspercentchange: number | undefined;
+
+    @Column('float')
+    assets_m: number | undefined;
+
+    @Column('varchar', { length: 255 })
+    ceo: string | undefined;
+
+    @Column('varchar', { length: 255 })
+    country: string | undefined;
+
+    @Column('varchar', { length: 255 })
+    headquarterscity: string | undefined;
+
+    @Column('varchar', { length: 255 })
+    headquartersstate: string | undefined;
+
+    @Column('text')
+    website: string | undefined;
+
+    @Column('varchar', { length: 255 })
+    companytype: string | undefined;
+
+    @Column('text')
+    footnote: string | undefined;
+
+    @Column('float')
+    marketcap_updated_m: number | undefined;
+
+    @Column('date')
+    updated: Date | undefined;
 }

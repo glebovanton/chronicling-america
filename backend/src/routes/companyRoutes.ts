@@ -1,22 +1,36 @@
 import { Router } from 'express';
 import { getRepository, ILike } from 'typeorm';
-import { Company } from '../entities/Company';
+import { Company } from 'src/entities/Company';
+import { mapCompanyResponse } from 'src/helpers'
 
 const router = Router();
 
 router.get('/companies', async (req, res) => {
+    try {
+        const companyRepository = getRepository(Company);
+
+        const companies = await companyRepository.find();
+
+        res.json(companies.map(mapCompanyResponse));
+    } catch (error) {
+        console.error("Error retrieving all companies: ", error);
+        res.status(500).json({ message: "Error retrieving all companies" });
+    }
+});
+
+router.get('/companiesByKey', async (req, res) => {
     try {
         const { search } = req.query;
         const companyRepository = getRepository(Company);
 
         const companies = await companyRepository.find({
             where: [
-                { name: ILike(`%${search}%`) },
+                { company: ILike(`%${search}%`) },
                 { ticker: ILike(`%${search}%`) },
             ],
         });
 
-        res.json(companies);
+        res.json(companies.map(mapCompanyResponse));
     } catch (error) {
         console.error("Error retrieving companies: ", error);
         res.status(500).json({ message: "Error retrieving companies" });
@@ -27,8 +41,7 @@ router.get('/companies/:id', async (req, res) => {
     try {
         const companyRepository = getRepository(Company);
 
-        // Correctly specify the query options to find a company by ID
-        const company = await companyRepository.findOneBy({ id: Number(req.params.id) });
+        const company = await companyRepository.findOneBy({ rank: Number(req.params.id) });
 
         if (company) {
             res.json(company);
