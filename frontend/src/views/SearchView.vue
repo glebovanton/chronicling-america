@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch, onBeforeUnmount } from 'vue';
-import { useCompanyStore } from '@/stores/company'
+import { useCompanyStore } from '@/stores/company';
 
 const searchDelay = 500;
 const companyStore = useCompanyStore();
@@ -35,37 +35,44 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="relative w-4/5 mb-16 text-center text-gray-800 dark:text-gray-300">
-    <input
-      v-model.trim="search"
-      class="w-full h-[2.5rem] px-3 border border-white border-opacity-40 bg-white bg-opacity-80 shadow-lg shadow-black/[0.03] backdrop-blur-[0.5rem] top-6 rounded-full dark:bg-gray-950 dark:border-black/40 dark:bg-opacity-75"
-      placeholder="Search companies"
-      @keydown.esc.prevent=""
-    />
-    <button v-if="search"
+    <div class="relative w-4/5 mb-16 text-center text-gray-800 dark:text-gray-300">
+        <input
+            class="w-full h-[2.5rem] px-3 border border-white border-opacity-40 bg-white bg-opacity-80 shadow-lg
+            shadow-black/[0.03] backdrop-blur-[0.5rem] top-6 rounded-full dark:bg-gray-950 dark:border-black/40
+            dark:bg-opacity-75"
+            placeholder="Search companies"
+            v-model.trim="search"
+            @keydown.esc.prevent=""
+        >
+        <button
+            v-if="search"
             type="button"
-            @click="search = ''">
-      <span class="absolute top-0 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-               style="
+            @click="search = ''"
+        >
+            <span
+                class="absolute top-0 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400
+                dark:hover:text-gray-300"
+                style="
         transform: translateX(-50%) translateY(50%) translateZ(0px);
-      ">X</span></button>
-    <div class="mt-4">
-      <template v-if="companyStore.companiesByKey?.length">
-        <ul class="p-4 mx-10 bg-slate-200/20 rounded">
-          <li
-            v-for="({ id, company }, index) in companyStore.companiesByKey"
-            :key="`company-${index}`"
-            v-observe-visibility="(isVisible: boolean) => handleVisibilityChange(isVisible, index)"
-          >
-            <template v-if="loadedIndexes.includes(index)">
-              <router-link :to="`/company/${id}`">{{ company }}</router-link>
+      "
+            >X</span></button>
+        <div class="mt-4">
+            <template v-if="companyStore.companiesByKey?.length">
+                <ul class="p-4 mx-10 bg-slate-200/20 rounded">
+                    <li
+                        v-for="({ id, company }, index) in companyStore.companiesByKey"
+                        :key="`company-${index}`"
+                        v-observe-visibility="(isVisible: boolean) => handleVisibilityChange(isVisible, index)"
+                    >
+                        <template v-if="loadedIndexes.includes(index)">
+                            <router-link :to="`/company/${id}`">{{ company }}</router-link>
+                        </template>
+                    </li>
+                </ul>
             </template>
-          </li>
-        </ul>
-      </template>
-      <p v-else>
-        No companies found
-      </p>
+            <p v-else>
+                No companies found
+            </p>
+        </div>
     </div>
-  </div>
 </template>

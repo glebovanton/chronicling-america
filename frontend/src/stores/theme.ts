@@ -1,13 +1,13 @@
-import { defineStore } from "pinia"
+import { defineStore } from "pinia";
 
-import { storageThemeKey, Theme, type ThemeState } from '@/types/theme'
+import { storageThemeKey, Theme, type ThemeState } from '@/types/theme';
 
 export const useThemeStore = defineStore('theme', {
     state: (): ThemeState => {
-        return { appTheme: null }
+        return { appTheme: null };
     },
     actions: {
-        initTheme() {
+        initTheme () {
             const localTheme = window.localStorage.getItem(storageThemeKey) as Theme | null;
 
             if (localTheme) {
@@ -20,11 +20,11 @@ export const useThemeStore = defineStore('theme', {
                 this.setTheme(Theme.Dark);
             }
         },
-        setTheme(theme: Theme) {
+        setTheme (theme: Theme) {
             this.appTheme = theme;
         },
-        toggleTheme() {
+        toggleTheme () {
             this.setTheme( this.appTheme === Theme.Light ? Theme.Dark : Theme.Light);
         },
     },
-})
+});

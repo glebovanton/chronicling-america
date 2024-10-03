@@ -1,18 +1,18 @@
-import './assets/main.css'
+import './assets/main.css';
 import './index.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import { ObserveVisibility } from 'vue-observe-visibility';
 
-import App from './App.vue'
-import router from './router'
-import './assets/tailwind.css'
+import App from './App.vue';
+import router from './router';
+import './assets/tailwind.css';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
+app.use(createPinia());
+app.use(router);
 app.directive('observe-visibility', ObserveVisibility);
 
-app.mount('#app')
+app.mount('#app');

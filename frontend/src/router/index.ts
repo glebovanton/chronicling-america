@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 import SearchView from '../views/SearchView.vue';
 import CompanyDetailView from '../views/CompanyDetailView.vue';
 

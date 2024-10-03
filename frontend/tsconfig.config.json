@@ -1,0 +1,7 @@
+{
+  "include": ["*.config.js"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false
+  }
+}

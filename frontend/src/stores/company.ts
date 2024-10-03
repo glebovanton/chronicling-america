@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { type CompanyState, type Company } from '@/types'
+import { type CompanyState, type Company } from '@/types';
 
 const apiUrlPrefix = `${import.meta.env.VITE_HOST}:${import.meta.env.VITE_BASE_PORT}/api/`;
 
@@ -12,11 +12,11 @@ export const useCompanyStore = defineStore('company', {
   }),
 
   actions: {
-    setCompaniesByKey(data: Company[] | null): void {
+    setCompaniesByKey (data: Company[] | null): void {
       this.companiesByKey = data;
     },
 
-    async fetchCompaniesByKey(key: string):Promise<void> {
+    async fetchCompaniesByKey (key: string):Promise<void> {
       const { data } = await axios.get(`${apiUrlPrefix}companiesByKey?search=${key}`);
 
       if (data) {
@@ -24,7 +24,7 @@ export const useCompanyStore = defineStore('company', {
       }
     },
 
-    async fetchCompany(id: string):Promise<void>  {
+    async fetchCompany (id: string):Promise<void>  {
       const { data } = await axios.get(`${apiUrlPrefix}companies/${id}`);
 
       if (data) {
@@ -32,8 +32,8 @@ export const useCompanyStore = defineStore('company', {
       }
     },
 
-    setSearchValue(value: string): void {
+    setSearchValue (value: string): void {
       this.searchValue = value;
-    }
+    },
   },
 });
