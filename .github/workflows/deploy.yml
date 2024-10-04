@@ -1,64 +1,47 @@
-# Simple workflow for deploying static content to a different repository's GitHub Pages
-name: Deploy static content to chronicling-america-fe Pages
+name: Deploy Frontend to chronicling-america-fe
 
 on:
   push:
-    branches: ['main']
-
-  workflow_dispatch: # Allows manual workflow runs
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout main repository
-        uses: actions/checkout@v4
+      - name: Checkout source repository
+        uses: actions/checkout@v3
 
-      - name: Change to frontend directory
-        run: cd ./frontend
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies and build
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build-git
 
-      - name: Build frontend
-        run: npm run build
+      - name: Deploy to chronicling-america-fe repository
         env:
-          VITE_HOST: ${{ secrets.VITE_C_HOST }}
-          VITE_BASE_URL: ${{ secrets.VITE_C_BASE_URL }}
-          VITE_BASE_PORT: ${{ secrets.VITE_C_BASE_PORT }}
-
-      - name: Checkout target repository (chronicling-america-fe)
-        uses: actions/checkout@v4
-        with:
-          repository: glebovanton/chronicling-america-fe
-          ref: gh-pages # Specify the branch to deploy to
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Copy built frontend to gh-pages
+          DEPLOY_REPO: glebovanton/chronicling-america-fe
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          rm -rf ./*
-          cp -r ../frontend/dist/* .
+          # Clone the target repository
+          git clone https://x-access-token:${GITHUB_TOKEN}@github.com/${DEPLOY_REPO}.git deploy-repo
+          cd deploy-repo
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+          # Remove old files in the root (if needed)
+          rm -rf *
+
+          # Copy new build files
+          cp -R ../frontend/dist/* .
+
+          # Push changes to target repository
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add .
-          git commit -m "Deploy updates to GitHub Pages"
-          git push origin gh-pages
+          git commit -m "Deploy build files"
+          git push
