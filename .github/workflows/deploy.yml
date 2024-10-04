@@ -3,7 +3,7 @@ name: Deploy static content to chronicling-america-fe Pages
 
 on:
   push:
-    branches: ['main'] # Runs on pushes targeting the default branch
+    branches: ['main']
 
   workflow_dispatch: # Allows manual workflow runs
 
