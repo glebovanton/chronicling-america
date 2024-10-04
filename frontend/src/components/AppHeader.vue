@@ -6,6 +6,10 @@ const linksData = [
     name: "Home",
     title: "Home",
   },
+  {
+    name: "About",
+    title: "About",
+  },
 ];
 
 function isActive (name: string): boolean {
