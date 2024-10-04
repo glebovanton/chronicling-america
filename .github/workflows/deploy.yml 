@@ -1,0 +1,64 @@
+# Simple workflow for deploying static content to a different repository's GitHub Pages
+name: Deploy static content to chronicling-america-fe Pages
+
+on:
+  push:
+    branches: ['main'] # Runs on pushes targeting the default branch
+
+  workflow_dispatch: # Allows manual workflow runs
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+
+      - name: Change to frontend directory
+        run: cd ./frontend
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          VITE_HOST: ${{ secrets.VITE_C_HOST }}
+          VITE_BASE_URL: ${{ secrets.VITE_C_BASE_URL }}
+          VITE_BASE_PORT: ${{ secrets.VITE_C_BASE_PORT }}
+
+      - name: Checkout target repository (chronicling-america-fe)
+        uses: actions/checkout@v4
+        with:
+          repository: glebovanton/chronicling-america-fe
+          ref: gh-pages # Specify the branch to deploy to
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy built frontend to gh-pages
+        run: |
+          rm -rf ./*
+          cp -r ../frontend/dist/* .
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add .
+          git commit -m "Deploy updates to GitHub Pages"
+          git push origin gh-pages
