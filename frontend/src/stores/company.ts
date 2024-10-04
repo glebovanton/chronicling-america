@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { type CompanyState, type Company } from '@/types';
 
-const apiUrlPrefix = `${import.meta.env.VITE_HOST}:${import.meta.env.VITE_BASE_PORT}/api/`;
+const apiUrlPrefix = `${import.meta.env.VITE_C_HOST}:${import.meta.env.VITE_C_BASE_PORT}/api/`;
 
 export const useCompanyStore = defineStore('company', {
   state: (): CompanyState => ({
