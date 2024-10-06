@@ -6,6 +6,8 @@ import NotFoundView from '../views/NotFoundView.vue';
 
 const prefix = import.meta.env.VITE_C_ENV === 'git' ? '/chronicling-america-fe' : '';
 
+console.log('!!!import.meta.env.VITE_C_ENV', import.meta.env.VITE_C_ENV);
+
 const routes = [
   {
     path: `${prefix}/`,
