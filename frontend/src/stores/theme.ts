@@ -7,8 +7,8 @@ export const useThemeStore = defineStore('theme', {
         return { appTheme: null };
     },
     actions: {
-        initTheme () {
-            const localTheme = window.localStorage.getItem(storageThemeKey) as Theme | null;
+        initTheme (): void {
+            const localTheme: Theme| null = window.localStorage.getItem(storageThemeKey) as Theme | null;
 
             if (localTheme) {
                 this.setTheme(localTheme);
@@ -20,10 +20,10 @@ export const useThemeStore = defineStore('theme', {
                 this.setTheme(Theme.Dark);
             }
         },
-        setTheme (theme: Theme) {
+        setTheme (theme: Theme): void {
             this.appTheme = theme;
         },
-        toggleTheme () {
+        toggleTheme (): void {
             this.setTheme( this.appTheme === Theme.Light ? Theme.Dark : Theme.Light);
         },
     },
