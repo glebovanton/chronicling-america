@@ -38,7 +38,7 @@ function isActive (name: string): boolean {
                 sm:w-[initial] sm:flex-nowrap sm:gap-5"
                 >
                     <li
-                        v-for="({ name, title, path }, index) in linksData"
+                        v-for="({ name, title }, index) in linksData"
                         :key="`link-${index}`"
                         class="h-3/4 flex items-center justify-center relative"
                         style="opacity: 1; transform: none"
@@ -46,7 +46,7 @@ function isActive (name: string): boolean {
                         <RouterLink
                             class="flex w-full items-center justify-center px-3 py-3 hover:text-gray-950 transition
                             dark:hover:text-gray-300 text-gray-950 dark:text-gray-200"
-                            :to="path"
+                            :to="{ name }"
                         >{{ title }}
                             <span
                                 v-show="isActive(name)"

@@ -3,19 +3,21 @@ import AboutView from '../views/AboutView.vue';
 import SearchView from '../views/SearchView.vue';
 import CompanyDetailView from '../views/CompanyDetailView.vue';
 
+const prefix = import.meta.env.VITE_C_ENV === 'git' ? '/chronicling-america-fe' : '';
+
 const routes = [
   {
-    path: '/',
+    path: `${prefix}/`,
     name: 'Home',
     component: SearchView,
   },
   {
-    path: '/company/:id',
+    path: `${prefix}/company/:id`,
     name: 'CompanyDetail',
     component: CompanyDetailView,
   },
   {
-    path: '/about',
+    path: `${prefix}/about`,
     name: 'About',
     component: AboutView,
   },

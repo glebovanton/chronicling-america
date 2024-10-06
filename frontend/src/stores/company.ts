@@ -9,6 +9,9 @@ export const useCompanyStore = defineStore('company', {
     searchValue: '',
     companiesByKey: null,
     company: null,
+    cachedCompanies: null,
+    isCachedCompaniesFetched: false,
+
   }),
 
   actions: {
@@ -29,6 +32,49 @@ export const useCompanyStore = defineStore('company', {
 
       if (data) {
         this.company = data;
+      }
+    },
+
+    async fetchCachedCompanies (): Promise<void> {
+      if (!this.isCachedCompaniesFetched) {
+        try {
+          const { data } = await axios.get<Company[]>('/chronicling-america-fe/companies.json');
+
+          if (data) {
+            this.cachedCompanies = data;
+            this.isCachedCompaniesFetched = true;
+          }
+        } catch (error) {
+          console.error('Error fetching cached companies:', error);
+        }
+      }
+    },
+
+    async fetchCachedCompaniesByKey (key: string): Promise<void> {
+      await this.fetchCachedCompanies();
+
+      if (this.cachedCompanies) {
+        const filteredCompanies: Company[] = this.cachedCompanies.filter(company => {
+          const companyNameMatches = company.company?.toLowerCase().includes(key.toLowerCase()) || false;
+          const tickerMatches = company.ticker?.toLowerCase().includes(key.toLowerCase()) || false;
+
+          return companyNameMatches || tickerMatches;
+        });
+
+        this.setCompaniesByKey(filteredCompanies);
+      }
+    },
+
+    async fetchCachedCompany (id: string): Promise<void> {
+      await this.fetchCachedCompanies();
+
+      if (this.cachedCompanies) {
+        const numericId: number = parseInt(id);
+        const company: Company | undefined = this.cachedCompanies.find(c => c.id === numericId);
+
+        if (company) {
+          this.company = company;
+        }
       }
     },
 

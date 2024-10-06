@@ -5,10 +5,14 @@ import { useCompanyStore } from '@/stores/company';
 
 const route = useRoute();
 const companyStore = useCompanyStore();
-const { fetchCompany } = companyStore;
+const { fetchCompany, fetchCachedCompany } = companyStore;
 
 onMounted(async () => {
-  await fetchCompany(route.params.id as string);
+  if (import.meta.env.VITE_C_ENV === 'git') {
+    await fetchCachedCompany(route.params.id as string);
+  } else {
+    await fetchCompany(route.params.id as string);
+  }
 });
 
 function formatKey (key: string): string {

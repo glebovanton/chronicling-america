@@ -40,4 +40,7 @@ export interface CompanyState {
     searchValue: string,
     companiesByKey: Company[] | null;
     company: Company | null;
+    cachedCompanies: Company[] | null;
+    isCachedCompaniesFetched: boolean;
+
 }

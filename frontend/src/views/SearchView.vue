@@ -4,7 +4,7 @@ import { useCompanyStore } from '@/stores/company';
 
 const searchDelay = 500;
 const companyStore = useCompanyStore();
-const { fetchCompaniesByKey, setCompaniesByKey, setSearchValue } = companyStore;
+const { fetchCompaniesByKey, fetchCachedCompaniesByKey, setCompaniesByKey, setSearchValue } = companyStore;
 const search = ref(companyStore.searchValue);
 const loadedIndexes = ref<number[]>([]);
 let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -22,7 +22,11 @@ watch(search, (newValue: string) => {
 
   timeout = setTimeout(async () => {
     if (newValue) {
-      await fetchCompaniesByKey(newValue);
+      if (import.meta.env.VITE_C_ENV === 'git') {
+        await fetchCachedCompaniesByKey(newValue);
+      } else {
+        await fetchCompaniesByKey(newValue);
+      }
     } else {
       setCompaniesByKey(null);
     }
@@ -65,7 +69,7 @@ onBeforeUnmount(() => {
                         v-observe-visibility="(isVisible: boolean) => handleVisibilityChange(isVisible, index)"
                     >
                         <template v-if="loadedIndexes.includes(index)">
-                            <router-link :to="`/company/${id}`">{{ company }}</router-link>
+                            <RouterLink :to="{ name: 'CompanyDetail', params: { id } }">{{ company }}</RouterLink>
                         </template>
                     </li>
                 </ul>
