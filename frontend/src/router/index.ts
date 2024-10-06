@@ -4,28 +4,24 @@ import SearchView from '../views/SearchView.vue';
 import CompanyDetailView from '../views/CompanyDetailView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
 
-const prefix = import.meta.env.VITE_C_ENV === 'git' ? '/chronicling-america-fe' : '';
-
-console.log('!!!import.meta.env.VITE_C_ENV', import.meta.env.VITE_C_ENV);
-
 const routes = [
   {
-    path: `${prefix}/`,
+    path: `/`,
     name: 'Home',
     component: SearchView,
   },
   {
-    path: `${prefix}/company/:id`,
+    path: `/company/:id`,
     name: 'CompanyDetail',
     component: CompanyDetailView,
   },
   {
-    path: `${prefix}/about`,
+    path: `/about`,
     name: 'About',
     component: AboutView,
   },
   {
-    path: '/:pathMatch(.*)*',
+    path: `/:pathMatch(.*)*`,
     name: 'NotFound',
     component: NotFoundView,
   },
