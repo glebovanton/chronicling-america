@@ -46,7 +46,7 @@ onBeforeUnmount(() => {
             dark:bg-opacity-75"
             placeholder="Search companies"
             v-model.trim="search"
-            @keydown.esc.prevent=""
+            @keydown.esc.prevent="setCompaniesByKey(null)"
         >
         <button
             v-if="search"
