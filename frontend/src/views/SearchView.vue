@@ -56,13 +56,13 @@ onBeforeUnmount(() => {
             <span
                 class="absolute top-0 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400
                 dark:hover:text-gray-300"
-                style="
-        transform: translateX(-50%) translateY(50%) translateZ(0px);
-      "
-            >X</span></button>
+                style="transform: translateX(-50%) translateY(50%) translateZ(0px);"
+            >X
+            </span>
+        </button>
         <div class="mt-4">
             <template v-if="companyStore.companiesByKey?.length">
-                <ul class="p-4 mx-10 bg-slate-200/20 rounded">
+                <ul class="p-4 mx-10 bg-slate-200/20 rounded max-h-80 overflow-y-auto custom-scrollbar">
                     <li
                         v-for="({ id, company }, index) in companyStore.companiesByKey"
                         :key="`company-${index}`"
@@ -80,3 +80,27 @@ onBeforeUnmount(() => {
         </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.custom-scrollbar {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(203, 213, 225, 0.3);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #64748b;
+    border-radius: 50px;
+    border: 2px solid rgba(203, 213, 225, 0.3);
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #64748b rgba(203, 213, 225, 0.3);
+}
+</style>

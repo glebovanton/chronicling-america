@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
 import ThemeSwitch from "./components/ThemeSwitch.vue";
 </script>
 
@@ -16,6 +17,7 @@ import ThemeSwitch from "./components/ThemeSwitch.vue";
         >
         <RouterView />
         <ThemeSwitch />
+        <AppFooter />
     </main>
 </template>
 
