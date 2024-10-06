@@ -18,6 +18,13 @@ jobs:
         with:
           node-version: 20
 
+      - name: Set environment variable
+        run: |
+          echo "VITE_C_BASE_PORT=${{ secrets.VITE_C_BASE_PORT }}" >> $GITHUB_ENV
+          echo "VITE_C_BASE_URL=${{ secrets.VITE_C_BASE_URL }}" >> $GITHUB_ENV
+          echo "VITE_C_ENV=${{ secrets.VITE_C_ENV }}" >> $GITHUB_ENV
+          echo "VITE_C_HOST=${{ secrets.VITE_C_HOST }}" >> $GITHUB_ENV
+
       - name: Install dependencies and build
         working-directory: frontend
         run: |
