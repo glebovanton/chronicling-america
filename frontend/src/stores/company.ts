@@ -35,17 +35,42 @@ export const useCompanyStore = defineStore('company', {
       }
     },
 
+    async decompressGzip (data: ArrayBuffer): Promise<Uint8Array> {
+      const { inflate } = await import('pako');
+
+      return inflate(new Uint8Array(data));
+    },
+
     async fetchCachedCompanies (): Promise<void> {
       if (!this.isCachedCompaniesFetched) {
         try {
-          const { data } = await axios.get<Company[]>('/chronicling-america-fe/companies.json');
+          const response = await axios.get('/chronicling-america-fe/companies.json.gz', {
+            headers: {
+              'Accept-Encoding': 'gzip',
+            },
+            responseType: 'arraybuffer',
+          });
 
-          if (data) {
-            this.cachedCompanies = data;
+          const arrayBuffer: ArrayBuffer = response.data;
+
+          if (arrayBuffer) {
+            const decompressedData = new TextDecoder('utf-8').decode(await this.decompressGzip(arrayBuffer));
+            this.cachedCompanies = JSON.parse(decompressedData);
             this.isCachedCompaniesFetched = true;
           }
         } catch (error) {
-          console.error('Error fetching cached companies:', error);
+          console.error('Error fetching compressed cached companies:', error);
+
+          try {
+            const { data } = await axios.get<Company[]>('/chronicling-america-fe/companies.json');
+
+            if (data) {
+              this.cachedCompanies = data;
+              this.isCachedCompaniesFetched = true;
+            }
+          } catch (jsonError) {
+            console.error('Error fetching normal cached companies:', jsonError);
+          }
         }
       }
     },
