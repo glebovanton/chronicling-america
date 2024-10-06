@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { inflate } from 'pako';
 import { type CompanyState, type Company } from '@/types';
 
 const apiUrlPrefix = `${import.meta.env.VITE_C_HOST}:${import.meta.env.VITE_C_BASE_PORT}/api/`;
@@ -36,8 +37,6 @@ export const useCompanyStore = defineStore('company', {
     },
 
     async decompressGzip (data: ArrayBuffer): Promise<Uint8Array> {
-      const { inflate } = await import('pako');
-
       return inflate(new Uint8Array(data));
     },
 
