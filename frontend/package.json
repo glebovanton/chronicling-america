@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "start": "npm run dev",
+    "start-git": "cross-env NODE_ENV=git npm run dev",
     "build": "run-p type-check \"build-only {@}\" --",
     "build-git": "cross-env NODE_ENV=git npm run build",
     "preview": "vite preview",
