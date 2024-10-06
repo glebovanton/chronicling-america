@@ -44,9 +44,6 @@ export const useCompanyStore = defineStore('company', {
       if (!this.isCachedCompaniesFetched) {
         try {
           const response = await axios.get('/chronicling-america-fe/companies.json.gz', {
-            headers: {
-              'Accept-Encoding': 'gzip',
-            },
             responseType: 'arraybuffer',
           });
 
