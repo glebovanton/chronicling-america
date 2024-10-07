@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { inflate } from 'pako';
+import { useToast } from 'vue-toast-notification';
 import { type CompanyState, type Company } from '@/types';
 
 const apiUrlPrefix = `${import.meta.env.VITE_C_HOST}:${import.meta.env.VITE_C_BASE_PORT}/api/`;
+const $toast = useToast();
 
 export const useCompanyStore = defineStore('company', {
   state: (): CompanyState => ({
@@ -21,18 +23,28 @@ export const useCompanyStore = defineStore('company', {
     },
 
     async fetchCompaniesByKey (key: string):Promise<void> {
-      const { data } = await axios.get(`${apiUrlPrefix}companiesByKey?search=${key}`);
+      try {
+        const { data } = await axios.get(`${apiUrlPrefix}companiesByKey?search=${key}`);
 
-      if (data) {
-        this.setCompaniesByKey(data);
+        if (data) {
+          this.setCompaniesByKey(data);
+        }
+      } catch (error) {
+        $toast.error('Error fetching companies by key');
+        console.error('Error fetching companies by key:', error);
       }
     },
 
     async fetchCompany (id: string):Promise<void>  {
-      const { data } = await axios.get(`${apiUrlPrefix}companies/${id}`);
+      try {
+        const { data } = await axios.get(`${apiUrlPrefix}companies/${id}`);
 
-      if (data) {
-        this.company = data;
+        if (data) {
+          this.company = data;
+        }
+      } catch (error) {
+        $toast.error('Error fetching companies');
+        console.error('Error fetching companies:', error);
       }
     },
 
@@ -66,6 +78,7 @@ export const useCompanyStore = defineStore('company', {
             }
           } catch (jsonError) {
             console.error('Error fetching normal cached companies:', jsonError);
+            $toast.error('Error fetching cached companies');
           }
         }
       }
