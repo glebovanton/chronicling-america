@@ -50,7 +50,8 @@ export interface Column {
     label: string;
 }
 
-export enum Sort {
+// eslint-disable-next-line no-shadow
+export enum SortEnum {
     asc = 'asc',
     desc = 'desc',
     
