@@ -14,6 +14,9 @@ const selectedColumns = ref<{ key: string; label: string }[]>([
   { key: 'ceo', label: 'CEO' },
 ]);
 
+const sortColumn = ref<string | null>(null);
+const sortDirection = ref<'asc' | 'desc' | null>(null);
+
 let timeout: ReturnType<typeof setTimeout> | null = null;
 
 const allColumns = [
@@ -24,7 +27,6 @@ const allColumns = [
   { key: 'industry', label: 'Industry' },
   { key: 'ceo', label: 'CEO' },
   { key: 'country', label: 'Country' },
-  { key: 'marketcap_march28_m', label: 'Market Cap (March 28)' },
 ];
 
 watch(search, (newValue: string) => {
@@ -56,6 +58,29 @@ const selectedColumnsSet = computed(() =>
 const filteredColumns = computed(() =>
   allColumns.filter((column) => selectedColumnsSet.value.has(column.key))
 );
+
+const sortedCompanies = computed(() => {
+  if (!sortColumn.value || !sortDirection.value) {
+    return companyStore.companiesByKey;
+  }
+  return [...(companyStore.companiesByKey || [])].sort((a, b) => {
+    const aValue = a[sortColumn.value];
+    const bValue = b[sortColumn.value];
+
+    if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1;
+    return 0;
+  });
+});
+
+const sortTable = (column: string) => {
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = 'asc';
+  }
+};
 </script>
 
 <template>
@@ -64,7 +89,7 @@ const filteredColumns = computed(() =>
       class="w-full h-[2.5rem] px-3 border border-white border-opacity-40 bg-white bg-opacity-80 shadow-lg
       shadow-black/[0.03] backdrop-blur-[0.5rem] top-6 rounded-full dark:bg-gray-950 dark:border-black/40
       dark:bg-opacity-75"
-      placeholder="Search companies"
+      placeholder="Type to search for companies"
       v-model.trim="search"
       @keydown.esc.prevent="setCompaniesByKey(null)"
     />
@@ -89,23 +114,31 @@ const filteredColumns = computed(() =>
       />
     </div>
 
-    <div class="mt-4 overflow-x-auto">
-      <table class="min-w-full bg-white dark:bg-gray-800 rounded-md">
-        <thead>
-        <tr class="bg-gray-200 dark:bg-gray-700">
+    <div class="mt-4 overflow-x-auto overflow-y-auto max-h-80 custom-scrollbar">
+      <table class="border-collapse min-w-full bg-white dark:bg-gray-800 rounded-md">
+        <thead class="sticky top-0">
+        <tr class="sticky top-0 bg-gray-200 dark:bg-gray-700">
           <th
             v-for="column in filteredColumns"
             :key="column.key"
-            class="py-2 px-4"
+            class="sticky top-0 py-2 px-4 cursor-pointer text-left whitespace-nowrap
+            overflow-hidden text-ellipsis"
+            @click="sortTable(column.key)"
           >
             {{ column.label }}
+            <span class="inline-block w-4 ml-2">
+              <template v-if="sortColumn === column.key">
+                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+              </template>
+              <template v-else>◆</template>
+            </span>
           </th>
         </tr>
         </thead>
         <tbody>
-        <template v-if="companyStore.companiesByKey?.length">
+        <template v-if="sortedCompanies?.length">
           <tr
-            v-for="(companyData, index) in companyStore.companiesByKey"
+            v-for="(companyData, index) in sortedCompanies"
             :key="`company-${index}`"
             class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-900"
           >
@@ -137,7 +170,7 @@ const filteredColumns = computed(() =>
   overflow-y: auto;
 
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
 
   &::-webkit-scrollbar-track {
@@ -171,11 +204,6 @@ const filteredColumns = computed(() =>
   .multiselect__option--selected {
     background-color: #c3c3c3;
     color: #f9fafb;
-    .multiselect__option--highlight {
-      &:after {
-        background: #ffafaf;
-      }
-    }
   }
 }
 </style>
