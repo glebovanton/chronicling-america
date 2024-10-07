@@ -77,8 +77,8 @@ export const useCompanyStore = defineStore('company', {
               this.isCachedCompaniesFetched = true;
             }
           } catch (jsonError) {
-            console.error('Error fetching normal cached companies:', jsonError);
             $toast.error('Error fetching cached companies');
+            console.error('Error fetching normal cached companies:', jsonError);
           }
         }
       }
