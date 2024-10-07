@@ -3,7 +3,7 @@ import { ref, watch, onBeforeUnmount, computed } from 'vue';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import { useCompanyStore } from '@/stores/company';
-import { type Column, SortEnum } from 'src/types';
+import { type Column, SortEnum, type  Company } from 'src/types';
 
 const searchDelay = 500;
 const companyStore = useCompanyStore();
@@ -60,19 +60,37 @@ const filteredColumns = computed(() =>
   allColumns.filter(column => selectedColumnsSet.value.has(column.key))
 );
 
-const sortedCompanies = computed(() => {
+const sortedCompanies = computed<Company[]>(() => {
   if (!sortColumn.value || !sortDirection.value) {
-    return companyStore.companiesByKey;
+    return companyStore.companiesByKey as Company[];
   }
 
-  return [...(companyStore.companiesByKey || [])].sort((a, b) => {
-    const aValue = a[sortColumn.value];
-    const bValue = b[sortColumn.value];
+  return [...(companyStore.companiesByKey || [])].sort((a: Company, b: Company) => {
+    const column = sortColumn.value as keyof Company;
 
-    if (aValue < bValue) return sortDirection.value === SortEnum.asc ? -1 : 1;
-    if (aValue > bValue) return sortDirection.value === SortEnum.asc ? 1 : -1;
+    const aValue = a[column];
+    const bValue = b[column];
 
-    return 0;
+    if (aValue === undefined && bValue === undefined) {
+      return 0;
+    }
+
+    if (aValue === undefined) {
+      return 1;
+    }
+
+    if (bValue === undefined) {
+      return -1;
+    }
+
+    switch (true) {
+      case (aValue < bValue):
+        return sortDirection.value === SortEnum.asc ? -1 : 1;
+      case (aValue > bValue):
+        return sortDirection.value === SortEnum.asc ? 1 : -1;
+      default:
+        return 0;
+    }
   });
 });
 
@@ -161,9 +179,9 @@ const sortTable = (column: string) => {
                                     v-if="column.key === 'company'"
                                     :to="{ name: 'CompanyDetail', params: { id: companyData.id } }"
                                 >
-                                    {{ companyData[column.key] }}
+                                    {{ companyData[column.key as keyof Company] }}
                                 </RouterLink>
-                                <span v-else>{{ companyData[column.key] }}</span>
+                                <span v-else>{{ companyData[column.key as keyof Company] }}</span>
                             </td>
                         </tr>
                     </template>

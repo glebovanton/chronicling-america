@@ -46,7 +46,7 @@ export interface CompanyState {
 }
 
 export interface Column {
-    key: string;
+    key: keyof Company;
     label: string;
 }
 
