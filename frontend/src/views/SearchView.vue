@@ -176,12 +176,10 @@ const sortTable = (column: string) => {
                                 class="py-2 px-4"
                             >
                                 <RouterLink
-                                    v-if="column.key === 'company'"
                                     :to="{ name: 'CompanyDetail', params: { id: companyData.id } }"
                                 >
                                     {{ companyData[column.key as keyof Company] }}
                                 </RouterLink>
-                                <span v-else>{{ companyData[column.key as keyof Company] }}</span>
                             </td>
                         </tr>
                     </template>
