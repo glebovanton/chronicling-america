@@ -37,10 +37,21 @@ export interface Company {
 export type CompanyDTO = Omit<Company, 'id'>;
 
 export interface CompanyState {
-    searchValue: string,
+    searchValue: string;
     companiesByKey: Company[] | null;
     company: Company | null;
     cachedCompanies: Company[] | null;
     isCachedCompaniesFetched: boolean;
 
+}
+
+export interface Column {
+    key: string;
+    label: string;
+}
+
+export enum Sort {
+    asc = 'asc',
+    desc = 'desc',
+    
 }

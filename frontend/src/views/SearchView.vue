@@ -3,23 +3,24 @@ import { ref, watch, onBeforeUnmount, computed } from 'vue';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import { useCompanyStore } from '@/stores/company';
+import { type Column, Sort } from 'src/types'
 
 const searchDelay = 500;
 const companyStore = useCompanyStore();
 const { fetchCompaniesByKey, fetchCachedCompaniesByKey, setCompaniesByKey, setSearchValue } = companyStore;
 const search = ref(companyStore.searchValue);
-const selectedColumns = ref<{ key: string; label: string }[]>([
+const selectedColumns = ref<Column[]>([
   { key: 'company', label: 'Company' },
   { key: 'ticker', label: 'Ticker' },
   { key: 'ceo', label: 'CEO' },
 ]);
 
 const sortColumn = ref<string | null>(null);
-const sortDirection = ref<'asc' | 'desc' | null>(null);
+const sortDirection = ref<Sort | null>(null);
 
 let timeout: ReturnType<typeof setTimeout> | null = null;
 
-const allColumns = [
+const allColumns: Column[] = [
   { key: 'company', label: 'Company' },
   { key: 'rank', label: 'Rank' },
   { key: 'ticker', label: 'Ticker' },
@@ -67,18 +68,18 @@ const sortedCompanies = computed(() => {
     const aValue = a[sortColumn.value];
     const bValue = b[sortColumn.value];
 
-    if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1;
+    if (aValue < bValue) return sortDirection.value === Sort.asc ? -1 : 1;
+    if (aValue > bValue) return sortDirection.value === Sort.asc ? 1 : -1;
     return 0;
   });
 });
 
 const sortTable = (column: string) => {
   if (sortColumn.value === column) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    sortDirection.value = sortDirection.value === Sort.asc ? Sort.desc : Sort.asc;
   } else {
     sortColumn.value = column;
-    sortDirection.value = 'asc';
+    sortDirection.value = Sort.asc;
   }
 };
 </script>
@@ -128,7 +129,7 @@ const sortTable = (column: string) => {
             {{ column.label }}
             <span class="inline-block w-4 ml-2">
               <template v-if="sortColumn === column.key">
-                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                {{ sortDirection === Sort.asc ? '▲' : '▼' }}
               </template>
               <template v-else>◆</template>
             </span>
